@@ -1,4 +1,4 @@
-package com.jmtebar.mrpapp.productionorders;
+package com.jmtebar.mrpapp.domain.productionorders;
 
 import org.junit.jupiter.api.Test;
 

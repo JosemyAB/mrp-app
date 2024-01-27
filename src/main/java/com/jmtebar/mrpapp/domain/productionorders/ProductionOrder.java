@@ -1,9 +1,8 @@
-package com.jmtebar.mrpapp.productionorders;
+package com.jmtebar.mrpapp.domain.productionorders;
 
 import com.jmtebar.mrpapp.ValidationException;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -29,7 +28,7 @@ public class ProductionOrder {
         return order;
     }
 
-    public ProductionOrder renameTo(String newName) throws ValidationException {
+    public ProductionOrder renameTo(String newName) {
         Objects.requireNonNull(newName, "New name is mandatory");
 
         if (state != ProductionOrderState.DRAFT) {
