@@ -1,10 +1,10 @@
 package com.jmtebar.mrpapp.web;
 
 import com.jmtebar.mrpapp.domain.productionorders.ProductionOrder;
-import com.jmtebar.mrpapp.domain.productionorders.ProductionOrders;
+import com.jmtebar.mrpapp.domain.productionorders.ProductionOrdersService;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Value;
-import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("api/productionOrders")
+@RequiredArgsConstructor
 public class ProductionOrdersController implements RepresentationModelProcessor<EntityModel<ProductionOrder>> {
 
     public static final String REL_RENAME = "rename";
@@ -26,18 +27,13 @@ public class ProductionOrdersController implements RepresentationModelProcessor<
     private final Logger logger = (Logger) LoggerFactory.getLogger(ProductionOrdersController.class);
 
     @Autowired
-    private ProductionOrders productionOrders;
+    private ProductionOrdersService productionOrdersService;
 
     @PostMapping("/{id}/rename")
     public ResponseEntity<?> rename(@PathVariable Long id, @RequestBody RenameRequest request) {
-
-        try {
-            return productionOrders.findById(id).map(po -> po.renameTo(request.getNewName())).map(po -> ResponseEntity.ok().body(EntityModel.of(po)))
-                    .orElse(ResponseEntity.notFound().build());
-        } catch (NullPointerException npe) {
-            logger.error("BOOOM!");
-            return ResponseEntity.badRequest().build();
-        }
+        return productionOrdersService.rename(id, request.newName)
+                .map(po -> ResponseEntity.ok().body(EntityModel.of(po)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @Override
